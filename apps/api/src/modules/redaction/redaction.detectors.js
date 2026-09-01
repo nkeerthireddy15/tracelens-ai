@@ -18,7 +18,9 @@ function findSensitiveKeyRule(key) {
 
 function redactObjectValue(value, counts) {
   if (Array.isArray(value)) {
-    return value.map((item) => redactObjectValue(item, counts))
+    return value.map((item) =>
+      redactObjectValue(item, counts)
+    )
   }
 
   if (
@@ -35,7 +37,10 @@ function redactObjectValue(value, counts) {
 
     if (rule && !isAlreadyRedacted(nestedValue)) {
       redactedObject[key] = REDACTION_LABELS[rule.type]
-      counts[rule.type] = (counts[rule.type] || 0) + 1
+
+      counts[rule.type] =
+        (counts[rule.type] || 0) + 1
+
       continue
     }
 
@@ -64,7 +69,11 @@ export function redactStructuredData(log) {
     }
 
     const counts = {}
-    const redactedValue = redactObjectValue(parsedLog, counts)
+
+    const redactedValue = redactObjectValue(
+      parsedLog,
+      counts
+    )
 
     return {
       isStructured: true,
@@ -130,14 +139,14 @@ const jwtDetector = createTextDetector(
 
 const passwordDetector = createTextDetector(
   'password',
-  /(\b(?:password|passwd|pwd)\b\s*[:=]\s*)(["']?)(?!\[REDACTED_)([^\s,;}"']+)\2/gi,
+  /((?:["']?\b(?:password|passwd|pwd)\b["']?)\s*[:=]\s*)(["']?)(?!\[REDACTED_)([^\s,;}"']+)\2/gi,
   (match, prefix, quote) =>
     `${prefix}${quote}${REDACTION_LABELS.password}${quote}`
 )
 
 const apiKeyDetector = createTextDetector(
   'apiKey',
-  /(\b(?:api[_-]?key|apikey)\b\s*[:=]\s*)(["']?)(?!\[REDACTED_)([^\s,;}"']+)\2/gi,
+  /((?:["']?\b(?:api[_-]?key|apikey)\b["']?)\s*[:=]\s*)(["']?)(?!\[REDACTED_)([^\s,;}"']+)\2/gi,
   (match, prefix, quote) =>
     `${prefix}${quote}${REDACTION_LABELS.apiKey}${quote}`
 )
@@ -151,7 +160,7 @@ const authorizationDetector = createTextDetector(
 
 const secretDetector = createTextDetector(
   'secret',
-  /(\b(?:client[_-]?secret|api[_-]?secret)\b\s*[:=]\s*)(["']?)(?!\[REDACTED_)([^\s,;}"']+)\2/gi,
+  /((?:["']?\b(?:client[_-]?secret|api[_-]?secret)\b["']?)\s*[:=]\s*)(["']?)(?!\[REDACTED_)([^\s,;}"']+)\2/gi,
   (match, prefix, quote) =>
     `${prefix}${quote}${REDACTION_LABELS.secret}${quote}`
 )

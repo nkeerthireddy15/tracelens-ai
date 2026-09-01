@@ -104,3 +104,27 @@ test('POST /api/v1/redactions/preview rejects unknown fields', async () => {
   assert.equal(response.status, 400)
   assert.equal(response.body.success, false)
 })
+
+test('does not echo raw logs in validation errors', async () => {
+  const secretValue = 'DO_NOT_RETURN_THIS_SECRET'
+
+  const response = await request(app)
+    .post('/api/v1/redactions/preview')
+    .send({
+      log: `${secretValue}${'a'.repeat(50_001)}`
+    })
+
+  assert.equal(response.status, 413)
+
+  const serializedResponse = JSON.stringify(response.body)
+
+  assert.equal(
+    serializedResponse.includes(secretValue),
+    false
+  )
+
+  assert.equal(
+    Object.hasOwn(response.body, 'log'),
+    false
+  )
+})
