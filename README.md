@@ -30,3 +30,13 @@ tracelens-ai/
 ├── package.json
 ├── package-lock.json
 └── README.md
+
+## Current capabilities
+
+- Paste production logs and stack traces
+- Preview secret redaction before AI analysis
+- Key-aware redaction for structured JSON
+- Format-aware redaction for unstructured logs
+- Detect emails, passwords, API keys, tokens, JWTs and database credentials
+- Preserve useful incident evidence
+- Display redaction counts by sensitive-data type
