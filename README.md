@@ -1,4 +1,4 @@
-# tracelens-ai
+
 # TraceLens AI
 
 TraceLens AI is an AI-powered production incident analysis platform for developers.
